@@ -1,0 +1,19 @@
+===================================================================================================================
+| Here is your Account Summary                                                                                    |
+===================================================================================================================
+| ID: 0     | Name: Citi Bank Checking   | Type: Income  | Amount:    $1,300.00 | Category : Checking Account     |
+| ID: 1     | Name: Citi Bank Saving     | Type: Income  | Amount:    $3,000.00 | Category : Saving Account       |
+| ID: 2     | Name: Wallet               | Type: Income  | Amount:      $101.60 | Category : Cash                 |
+| ID: 3     | Name: Whole Foods Market   | Type: Expense | Amount:    ($105.99) | Category : Groceries            |
+| ID: 4     | Name: Rent                 | Type: Expense | Amount:  ($1,500.00) | Category : Rent                 |
+| ID: 5     | Name: Pizza Hut            | Type: Expense | Amount:     ($92.41) | Category : Dining Out           |
+=================================================================================================================================================
+| Here is your Transaction View                                                                                                                 |
+=================================================================================================================================================
+| ID: 0     | Date: 05/18/2019   | User: Hugh    | WithdrawFrom: Wallet               | DepositTo : Pizza Hut            | Amount:       $60.85 |
+| ID: 1     | Date: 05/19/2019   | User: Hugh    | WithdrawFrom: Citi Bank Checking   | DepositTo : Rent                 | Amount:    $1,500.00 |
+| ID: 2     | Date: 05/20/2019   | User: Hugh    | WithdrawFrom: Citi Bank Checking   | DepositTo : Wallet               | Amount:      $200.00 |
+| ID: 3     | Date: 05/21/2019   | User: Hugh    | WithdrawFrom: Wallet               | DepositTo : Whole Foods Market   | Amount:      $105.99 |
+| ID: 4     | Date: 05/22/2019   | User: Hugh    | WithdrawFrom: Wallet               | DepositTo : Pizza Hut            | Amount:       $10.99 |
+| ID: 5     | Date: 05/23/2019   | User: Hugh    | WithdrawFrom: Wallet               | DepositTo : Pizza Hut            | Amount:       $20.57 |
+=================================================================================================================================================

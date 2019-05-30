@@ -1,0 +1,6 @@
+income,Citi Bank Checking,Hugh,3000,Checking Account
+income,Citi Bank Saving,Hugh,3000,Saving Account
+income,Wallet,Hugh,100,Cash
+expense,Whole Foods Market,Hugh,0,Groceries
+expense,Rent,Hugh,0,Rent
+expense,Pizza Hut,Hugh,0,Dining Out

@@ -1,0 +1,14 @@
+Requirements: CS 622 Assignment 1 Butler
+
+Design: 
+Class Diagram and Sequence Diagram: https://docs.google.com/spreadsheets/d/1FspNYtWkiaUuX9S7IanHJf2gN2enT7f-Io4kONcdGhs/edit?usp=sharing
+
+Side Note about Dao Class:
+The Data Access Object (DAO) pattern is a structural pattern that allows us to isolate the application/business layer from the persistence layer using an abstract API.
+The AccountDao and TransactionDao will take care of all actions like get, add, remove and update for account and transaction.
+
+Run JUnit test from com.butler.test package
+
+Run app from com.butler.application/Main
+
+ButlerDiagram.ucls is a Class Diagram create by ObjectAid base on the OMG's UML 2.0 specification. You can ignore it if you can't open it. Check https://objectaid.com/install-objectaid if you want to install this plugin.
