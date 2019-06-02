@@ -21,6 +21,8 @@ import com.butler.domain.Transaction;
 class DataBaseTest {
 
 	/*
+	 * My input file context
+	 * 
 	income,Citi Bank Checking,Hugh,3000,Checking Account
 	income,Citi Bank Saving,Hugh,3000,Saving Account
 	income,Wallet,Hugh,100,Cash

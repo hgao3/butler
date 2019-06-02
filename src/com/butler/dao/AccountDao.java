@@ -80,4 +80,16 @@ public class AccountDao implements Dao<Account> {
 			AccountDao.accountsCounter++;
 		}		
 	}
+
+	@Override
+	public void update(Account t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(Account t) {
+		// TODO Auto-generated method stub
+		
+	}
 }
