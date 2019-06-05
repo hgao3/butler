@@ -3,6 +3,7 @@ package com.butler.domain;
 import java.text.NumberFormat;
 
 public abstract class Account {
+	private int id;
 	private String name;
 	private String owner;
 	private double amount;
@@ -19,6 +20,13 @@ public abstract class Account {
 		this.owner = owner;
 		this.amount = amount;
 		this.category = category;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	public String getName() {
 		return name;
@@ -55,4 +63,6 @@ public abstract class Account {
 		this.category = category;
 	}
 	public abstract String getType();
+	
+	public abstract String toDataString();
 }

@@ -19,7 +19,7 @@ public class AccountDao implements Dao<Account> {
 	public static HashMap<Integer, Account> accounts = new HashMap<Integer, Account>();
 	
 	@Override
-	public Account get(Integer id) {
+	public Account get(Integer id) throws ResourceNotFoundException {
 		Account acc = AccountDao.accounts.get(id);
 		if (acc == null) {
 			throw new ResourceNotFoundException("Account", "id", id);
@@ -76,20 +76,20 @@ public class AccountDao implements Dao<Account> {
 	@Override
 	public void save(Account acc) {
 		if (acc != null) {
+			acc.setId(AccountDao.accountsCounter);
 			AccountDao.accounts.put(AccountDao.accountsCounter, acc);
 			AccountDao.accountsCounter++;
 		}		
 	}
 
 	@Override
-	public void update(Account t) {
-		// TODO Auto-generated method stub
-		
+	public void update(Integer id, Account a) {
+		AccountDao.accounts.remove(id);
+		AccountDao.accounts.put(id, a);		
 	}
 
 	@Override
-	public void delete(Account t) {
-		// TODO Auto-generated method stub
-		
+	public void delete(Integer id) {
+		AccountDao.accounts.remove(id);		
 	}
 }

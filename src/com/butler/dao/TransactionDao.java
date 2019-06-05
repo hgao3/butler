@@ -17,7 +17,7 @@ public class TransactionDao implements Dao<Transaction> {
 	public static HashMap<Integer, Transaction> transactions = new HashMap<Integer, Transaction>();
 	
 	@Override
-	public Transaction get(Integer id) {
+	public Transaction get(Integer id) throws ResourceNotFoundException {
 		Transaction trans = TransactionDao.transactions.get(id);
 		if (trans == null) {
 			throw new ResourceNotFoundException("Account", "id", id);
@@ -51,15 +51,14 @@ public class TransactionDao implements Dao<Transaction> {
 	}
 
 	@Override
-	public void update(Transaction t) {
-		// TODO Auto-generated method stub
-		
+	public void update(Integer id, Transaction t) {
+		TransactionDao.transactions.remove(id);
+		TransactionDao.transactions.put(id, t);		
 	}
 
 	@Override
-	public void delete(Transaction t) {
-		// TODO Auto-generated method stub
-		
+	public void delete(Integer id) {
+		TransactionDao.transactions.remove(id);
 	}
 
 }

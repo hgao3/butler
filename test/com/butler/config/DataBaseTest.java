@@ -1,4 +1,4 @@
-package com.butler.test;
+package com.butler.config;
 
 import static org.junit.jupiter.api.Assertions.*;
 

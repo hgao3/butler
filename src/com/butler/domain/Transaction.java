@@ -87,4 +87,8 @@ public class Transaction {
 				this.toStringDate(), this.getUser(), this.getWithdrawFrom().getName(), this.getDepositTo().getName(),
 				this.getAmountInCurrency());
 	}
+	public String toDataString() {
+		return String.format("%s,%.2f,%d,%d", 
+				this.toStringDate(), this.getAmount(), this.getWithdrawFrom().getId(), this.getDepositTo().getId()); 
+	}
 }

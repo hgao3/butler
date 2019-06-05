@@ -44,7 +44,7 @@ public class Main {
 
 		while (!isExit) {
 			printMainPage();
-			int choice = ButlerIOUtils.getInputWithIntRange(scan, 1, 5);
+			int choice = ButlerIOUtils.getInputWithIntRange(scan, 1, 4);
 			performMenuAction(choice);
 		}
 	}
@@ -62,11 +62,10 @@ public class Main {
 	public void printMainPage() {
 		System.out.println("===================================================================================");
 		System.out.println("| Will your like to:                                                              |");
-		System.out.println("| 1.	Submit a transaction (Limit)                                              |");
-		System.out.println("| 2.	Manage transactions (Limit)                                               |");
-		System.out.println("| 3.	Manage accounts (Limit)                                                   |");
-		System.out.println("| 4.	Save report (Limit)                                                       |");
-		System.out.println("| 5.	Exit                                                                      |");
+		System.out.println("| 1.	Manage transactions                                                       |");
+		System.out.println("| 2.	Manage accounts                                                           |");
+		System.out.println("| 3.	Save report                                                               |");
+		System.out.println("| 4.	Exit                                                                      |");
 		System.out.println("===================================================================================");
 	}
 
@@ -80,18 +79,15 @@ public class Main {
 	private void performMenuAction(int choice) throws ClassInstantiationException {
 		switch (choice) {
 		case 1:
-			this.transactionUI.submitTransaction(scan);
+			this.transactionUI.manageTransactions();
 			break;
 		case 2:
-			this.transactionUI.manageTransactions(scan);
+			this.accountUI.manageAccounts();
 			break;
 		case 3:
-			this.accountUI.manageAccounts(scan);
-			break;
-		case 4:
 			this.saveReport();
 			break;
-		case 5:
+		case 4:
 			System.out.println("Good bye!");
 			isExit = true;
 			break;
@@ -99,11 +95,5 @@ public class Main {
 			System.out.println("That wasn't a choice.");
 			break;
 		}
-	}
-
-	private void sorry() {
-		System.out.println("===================================================================================");
-		System.out.println("| Sorry, the function is not available in this version.                           |");
-		System.out.println("===================================================================================");
 	}
 }

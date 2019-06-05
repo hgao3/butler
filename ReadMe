@@ -7,7 +7,7 @@ Side Note about Dao Class:
 The Data Access Object (DAO) pattern is a structural pattern that allows us to isolate the application/business layer from the persistence layer using an abstract API.
 The AccountDao and TransactionDao will take care of all actions like get, add, remove and update for account and transaction.
 
-Run JUnit test from com.butler.test package
+Run JUnit test from test/com.butler.application, test/com.butler.config, test/com.butler.domain package
 
 Run app from com.butler.application/Main
 

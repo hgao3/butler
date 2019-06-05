@@ -24,4 +24,9 @@ public class IncomeAccount extends Account {
 		return String.format("| Name: %-20s | Type: %-7s | Amount: %12s | Category : %-20s |", 
 				this.getName(), this.getType(), this.getAmountInCurrency(), this.getCategory()); 
 	}
+	@Override
+	public String toDataString() {
+		return String.format("%s,%s,%.2f,%s", 
+				this.getType(), this.getName(), this.getAmount(), this.getCategory()); 
+	}
 }

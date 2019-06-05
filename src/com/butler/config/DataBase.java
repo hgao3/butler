@@ -3,6 +3,7 @@ package com.butler.config;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.butler.application.Main;
 import com.butler.dao.AccountDao;
 import com.butler.dao.TransactionDao;
 import com.butler.domain.Account;
@@ -25,6 +27,7 @@ public class DataBase {
 
 	private AccountDao accountDao = new AccountDao();
 	private TransactionDao transactionDao = new TransactionDao();
+	private NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
 	private Scanner scan;
 
@@ -56,10 +59,25 @@ public class DataBase {
 
 	public void preloadAccount() throws FileNotFoundException {
 		System.out.println("Loading account data from " + PRELOAD_ACCOUNT_DATA + "...");
+		scan = new Scanner(new File(PRELOAD_ACCOUNT_DATA));
+		scanAccountWithIO(scan,false, -1);
+	}
+	
+	/**
+	 * This method had used by two class. 
+	 * callFromUI: true, calling from UI class. It will print the scan account and return true when it scan "0"
+	 * callFromUI: false, calling from DataBase. It will keep scan accounts from text file.
+	 * updateId: -1 mean no update, >0 mean the account id that we want to update. 
+	 * @param scan
+	 * @param callFromUI
+	 * @param updateId
+	 * @return
+	 */
+	public boolean scanAccountWithIO(Scanner scan, boolean callFromUI, int updateId) {
 		String line;
 		String[] lineVector;
 		Account acc = null;
-		scan = new Scanner(new File(PRELOAD_ACCOUNT_DATA));
+		int choice;
 		while (scan.hasNext()) {
 			if (scan.hasNextLine()) {
 				try {
@@ -70,7 +88,57 @@ public class DataBase {
 					}
 					// separate all values by comma
 					lineVector = line.split(",");
-					if (lineVector.length == 5) {
+					
+					if (callFromUI) {
+						// if user only enter 0 to go back to main page
+						if (lineVector.length == 1) {
+							try {
+							choice = Integer.parseInt(lineVector[0]);
+							} catch (NumberFormatException | NullPointerException e ) {
+								System.out.println("We can't parse what you enter [" + line + "]. Please try again or enter 0 to go  back to main page. ");
+								continue;
+							}
+							if (updateId>-1) {
+								if (choice == -1) {
+									// return true to flag exit.
+									return true;
+								}
+								System.out.println("You have to enter -1 or an account");
+							} else {
+								if (choice == 0) {
+									// return true to flag exit.
+									return true;
+								}
+								System.out.println("You have to enter 0 or an account");
+							}
+							
+							
+						} else if (lineVector.length == 4) { // if user enter a transaction with 3 comma, [string,string,double,string]
+								// parsing the values to string and double
+								String accountType = lineVector[0];
+								String name = lineVector[1];
+								double amount = Double.parseDouble(lineVector[2]);
+								String category = lineVector[3];
+
+								if (accountType.equalsIgnoreCase("income")) {
+									acc = new IncomeAccount(name, Main.LOGIN_USER, amount, category);
+								} else if (accountType.equalsIgnoreCase("expense")) {
+									acc = new ExpenseAccount(name, Main.LOGIN_USER, amount, category);
+								}
+								if (updateId>-1) {
+									// save account
+									accountDao.update(updateId, acc);
+								} else {
+									// save account
+									accountDao.save(acc);
+								}
+
+									System.out.println("===================================================================================================================");
+									System.out.println(String.format("| %-110s  |",acc));
+									System.out.println("===================================================================================================================");	
+								
+							}
+					} else if (lineVector.length == 5) { // if user enter a transaction with 4 comma, [string,string,string,double,string]
 						// parsing the values to string and double
 						String accountType = lineVector[0];
 						String name = lineVector[1];
@@ -91,14 +159,38 @@ public class DataBase {
 				}
 			}
 		}
+		// default to false
+		return false;
 	}
 
 	public void preloadTransaction() throws FileNotFoundException {
 		System.out.println("Loading transaction data from " + PRELOAD_TRANSACTION_DATA + "...");
+		scan = new Scanner(new File(PRELOAD_TRANSACTION_DATA));
+		scanTransactionWithIO(scan,false, -1);
+
+	}
+	
+	/**
+	 * This method had used by two class. 
+	 * callFromUI: true, calling from UI class. It will print the scan transaction and return true when it scan "0"
+	 * callFromUI: false, calling from DataBase. It will keep scan transaction from text file.
+	 * updateId: -1 mean no update, >0 mean the transaction id that we want to update. 
+	 * @param scan
+	 * @param callFromUI
+	 * @param updateId
+	 * @return
+	 */
+	public boolean scanTransactionWithIO(Scanner scan, boolean callFromUI, int updateId) {		
 		String line;
 		String[] lineVector;
+		Account accountFrom = null;
+		Account accountTo = null;
 		Transaction trans = null;
-		scan = new Scanner(new File(PRELOAD_TRANSACTION_DATA));
+		String date = null;
+		double amount = 0;
+		int accountFromId = -1;
+		int accountToId = -1;
+		int choice;
 		while (scan.hasNext()) {
 			if (scan.hasNextLine()) {
 				try {
@@ -109,13 +201,104 @@ public class DataBase {
 					}
 					// separate all values by comma
 					lineVector = line.split(",");
-					if (lineVector.length == 5) {
+					
+					
+					if (callFromUI) {						
+						// if user only enter 0 to go back to main page
+						if (lineVector.length == 1) {
+							try {
+							choice = Integer.parseInt(lineVector[0]);
+							} catch (NumberFormatException | NullPointerException e ) {
+								System.out.println("We can't parse what you enter [" + line + "]. Please try again or enter 0 to go  back to main page. ");
+								continue;
+							}
+							if (updateId>-1) {
+								if (choice == -1) {
+									// return true to flag exit.
+									return true;
+								}
+								System.out.println("You have to enter -1 or an transcation");
+							} else {
+								if (choice == 0) {
+									// return true to flag exit.
+									return true;
+								}
+								System.out.println("You have to enter 0 or an transcation");
+							}
+						} else if (lineVector.length == 4) {
+							try {
+							// parsing the values to string and double
+							date = lineVector[0];
+							amount = Double.parseDouble(lineVector[1]);
+							accountFromId = Integer.parseInt(lineVector[2]);
+							accountToId = Integer.parseInt(lineVector[3]);
+							} catch (NumberFormatException | NullPointerException e ) {
+								System.out.println("We can't parse what you enter [" + line + "]. Please try again or enter 0 to go  back to main page. ");
+								continue;
+							}
+				
+							accountFrom = accountDao.get(accountFromId);
+							accountTo = accountDao.get(accountToId);
+							
+							if (accountFrom != null && accountTo != null) {
+								
+								if (updateId>-1) {
+									// update Transaction
+									
+									Transaction oldTrans = transactionDao.get(updateId);
+									// return the money
+									accountDao.accountTransfer(accountTo, accountFrom, oldTrans.getAmount());
+									
+									// create a new Transaction
+									accountDao.accountTransfer(accountFrom, accountTo, amount);
+									trans = new Transaction(date, Main.LOGIN_USER, accountFrom, accountTo, amount);
+									transactionDao.update(updateId, trans);
+								} else {
+									// save Transaction
+									accountDao.accountTransfer(accountFrom, accountTo, amount);
+									
+									trans = new Transaction(date, Main.LOGIN_USER, accountFrom, accountTo, amount);
+									transactionDao.save(trans);
+								}
+
+			
+								System.out.println("A transaction of " + formatter.format(amount) + " is withdraw from "
+										+ accountFrom.getName() + " and deposit to " + accountTo.getName() + " at " + date
+										+ ".");
+								System.out.println( 
+										"| You new balance for both account are:                                                               |");
+								System.out.println(accountFrom);
+								System.out.println(accountTo);
+								System.out.println(
+										"===================================================================================");
+								if (updateId>-1) {
+									// update Transaction
+									System.out.println(
+											"| You can enter another transaction or enter -1 to go back to main page.           |");
+								} else {
+									System.out.println(
+											"| You can enter another transaction or enter 0 to go back to main page.           |");
+								}
+								
+								System.out.println(
+										"===================================================================================");
+							} else {
+								System.out.println(
+										"====================================================================================");
+								System.out.println(
+										"| Invalid Entry, Please check if you mistype account id or not follows the rules.|");
+								System.out.println(
+										"====================================================================================");
+							}
+						}
+						
+					} else if (lineVector.length == 5) {
 						// parsing the values to string and double
 						String dateString = lineVector[0];
 						String name = lineVector[1];
-						double amount = Double.parseDouble(lineVector[2]);
-						int accountFromId = Integer.parseInt(lineVector[3]);
-						int accountToId = Integer.parseInt(lineVector[4]);
+						amount = Double.parseDouble(lineVector[2]);
+						accountFromId = Integer.parseInt(lineVector[3]);
+						accountToId = Integer.parseInt(lineVector[4]);
 						// get account by id
 						Account withdrawFrom = accountDao.get(accountFromId);
 						Account depositTo = accountDao.get(accountToId);
@@ -130,6 +313,8 @@ public class DataBase {
 				}
 			}
 		}
+		// default to false
+		return false;
 	}
 
 	public void printLine(PrintWriter writer, int size) {

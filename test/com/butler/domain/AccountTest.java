@@ -1,4 +1,4 @@
-package com.butler.test;
+package com.butler.domain;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
