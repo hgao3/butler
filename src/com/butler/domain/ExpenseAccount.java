@@ -1,6 +1,10 @@
 package com.butler.domain;
 
 public class ExpenseAccount extends Account {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5334502539871031867L;
 	public ExpenseAccount() {
 		super();
 	}

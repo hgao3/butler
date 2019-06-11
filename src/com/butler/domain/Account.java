@@ -1,8 +1,13 @@
 package com.butler.domain;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 
-public abstract class Account {
+public abstract class Account implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2241276831419900166L;
 	private int id;
 	private String name;
 	private String owner;

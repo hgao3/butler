@@ -26,6 +26,7 @@ public class Main {
 	private DataBase database = new DataBase();
 	private AccountUI accountUI = new AccountUI();
 	private TransactionUI transactionUI = new TransactionUI();
+	private ReportUI reportUI = new ReportUI();
 	public final static String LOGIN_USER = "Hugh";
 
 	public static void main(String[] args) throws Exception {
@@ -50,8 +51,11 @@ public class Main {
 	}
 
 	private void setUpData() throws Exception {
-		database.preloadAccount();
-		database.preloadTransaction();
+		//database.preloadAccount();
+		//database.preloadTransaction();
+		//replace preload with dat instead of txt file
+		database.preloadAccountFromDat();
+		database.preloadTransactionFromDat();
 	}
 
 	public void printHeader() {
@@ -85,7 +89,7 @@ public class Main {
 			this.accountUI.manageAccounts();
 			break;
 		case 3:
-			this.saveReport();
+			this.reportUI.managePrintReports();
 			break;
 		case 4:
 			System.out.println("Good bye!");

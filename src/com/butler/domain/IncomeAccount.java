@@ -2,6 +2,10 @@ package com.butler.domain;
 
 public class IncomeAccount extends Account {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3360012880708613546L;
 	public IncomeAccount() {
 		super();
 	}

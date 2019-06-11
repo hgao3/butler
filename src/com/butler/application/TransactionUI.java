@@ -20,6 +20,8 @@ public class TransactionUI {
 	private boolean isExitSubMenu = false;
 
 	public void manageTransactions() {
+		isExitMenu = false;
+		isExitSubMenu = false;
 		scan = new Scanner(System.in);
 
 		while (!isExitMenu) {

@@ -18,6 +18,8 @@ public class AccountUI {
 	private boolean isExitSubMenu = false;
 
 	public void manageAccounts() {
+		isExitMenu = false;
+		isExitSubMenu = false;
 		scan = new Scanner(System.in);
 
 		while (!isExitMenu) {

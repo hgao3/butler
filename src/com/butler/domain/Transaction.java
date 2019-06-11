@@ -1,5 +1,6 @@
 package com.butler.domain;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,7 +8,12 @@ import java.util.Date;
 
 import com.butler.exception.ClassInstantiationException;
 
-public class Transaction {
+public class Transaction implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7644917661471294971L;
+	private int id;
 	private Date date;
 	private String user;
 	private Account withdrawFrom;
@@ -28,6 +34,13 @@ public class Transaction {
 		}
 	}
 
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	public Date getDate() {
 		return date;
 	}

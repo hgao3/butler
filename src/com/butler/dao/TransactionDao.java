@@ -45,6 +45,7 @@ public class TransactionDao implements Dao<Transaction> {
 	@Override
 	public void save(Transaction t) {
 		if (t != null) {
+			t.setId(TransactionDao.transactionsCounter);
 			TransactionDao.transactions.put(TransactionDao.transactionsCounter, t);
 			TransactionDao.transactionsCounter++;
 		}	

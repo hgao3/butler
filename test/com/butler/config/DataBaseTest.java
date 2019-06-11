@@ -7,9 +7,12 @@ import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.butler.application.AccountUI;
 import com.butler.config.DataBase;
 import com.butler.dao.AccountDao;
 import com.butler.dao.TransactionDao;
@@ -39,9 +42,21 @@ class DataBaseTest {
 
 	*/
 	
+	private AccountUI accountUI = new AccountUI();
+	private DataBase db = new DataBase();
+	private AccountDao accountDao = new AccountDao();
+	private TransactionDao transactionDao = new TransactionDao();
+
+	@AfterEach
+	void tearDown() throws Exception {
+		accountDao.accounts.clear();
+		accountDao.accountsCounter = 0;
+		transactionDao.transactions.clear();
+		transactionDao.transactionsCounter = 0;
+	}
+	
 	@Test
 	void test() throws FileNotFoundException {
-		DataBase db = new DataBase();
 		
 		// test preloadAccount
 		db.preloadAccount();
