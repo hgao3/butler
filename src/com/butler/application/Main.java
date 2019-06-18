@@ -55,6 +55,7 @@ public class Main {
 		
 		// drop table
 		dbConn.dropTable();
+		dbConn.shutDownDatabaseConnection();
 	}
 
 	private void setUpData() throws Exception {
@@ -64,7 +65,6 @@ public class Main {
 		dbConn.createTable();
 		dbConn.preloadAccountData();
 		dbConn.preloadTransactionsData();
-	
 	}
 
 	public void printHeader() {

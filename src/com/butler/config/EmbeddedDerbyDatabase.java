@@ -36,8 +36,10 @@ public class EmbeddedDerbyDatabase {
 
 			// conn.commit();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+		} finally {
+			// release all open resources to avoid unnecessary memory usage
+			close(null, s, null);
 		}
 		System.out.println("Committed the drop table");
 
