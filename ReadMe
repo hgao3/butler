@@ -7,8 +7,8 @@ Side Note about Dao Class:
 The Data Access Object (DAO) pattern is a structural pattern that allows us to isolate the application/business layer from the persistence layer using an abstract API.
 The AccountDao and TransactionDao will take care of all actions like get, add, remove and update for account and transaction.
 
-Run JUnit test from test/com.butler.application, test/com.butler.config, test/com.butler.domain package
+Run JUnit test from test/com.butler.application, test/com.butler.config, test/com.butler.domain package (Note: after I update to Derby database, you can't run test/com.butler.config as package, you can only run one test at the time)
 
 Run app from com.butler.application/Main
 
-ButlerDiagram.ucls is a Class Diagram create by ObjectAid base on the OMG's UML 2.0 specification. You can ignore it if you can't open it. Check https://objectaid.com/install-objectaid if you want to install this plugin.
+Note: always exit the app with (4. Exit). This app will create and preload data to database and clean up when user exit with (4. Exit). Fail to do that will preload the data more than once (manually delete the derbyDB folder will fix it). 

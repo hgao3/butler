@@ -1,1 +1,4 @@
 /bin/
+
+/derby.log
+/derbyDB/**

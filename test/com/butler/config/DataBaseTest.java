@@ -47,12 +47,20 @@ class DataBaseTest {
 	private AccountDao accountDao = new AccountDao();
 	private TransactionDao transactionDao = new TransactionDao();
 
+	private EmbeddedDerbyDatabase conn = new EmbeddedDerbyDatabase();
+
+	@BeforeEach
+	void setUp() throws Exception {
+		conn.createDatabaseConnection();
+		conn.createTable();
+		//conn.preloadAccountData();
+		//conn.preloadTransactionsData();
+	}
+
 	@AfterEach
 	void tearDown() throws Exception {
-		accountDao.accounts.clear();
-		accountDao.accountsCounter = 0;
-		transactionDao.transactions.clear();
-		transactionDao.transactionsCounter = 0;
+		conn.dropTable();
+		conn.shutDownDatabaseConnection();
 	}
 	
 	@Test
@@ -62,7 +70,7 @@ class DataBaseTest {
 		db.preloadAccount();
 		
 		// Only going to do one test with the first account
-		Account acc0 = AccountDao.accounts.get(0);
+		Account acc0 = accountDao.get(0);
 		Assertions.assertTrue(acc0.getAmount()==3000, "Amount should be 3000");
 		Assertions.assertTrue(acc0.getAmountInCurrency().equalsIgnoreCase("$3,000.00"), "Amount should be $3,000.00");
 		Assertions.assertTrue(acc0.getCategory().equalsIgnoreCase("Checking Account"), "Category should be Checking Account");
@@ -70,23 +78,23 @@ class DataBaseTest {
 		Assertions.assertTrue(acc0.getOwner().equalsIgnoreCase("Hugh"), "Owner should be Hugh");
 		Assertions.assertTrue(acc0.getType().equalsIgnoreCase("Income"), "Type should be Income");
 		
-		Assertions.assertTrue( AccountDao.accounts.size()==6, "size should be 6");
+		Assertions.assertTrue( accountDao.getAll().size()==6, "size should be 6");
 		
 		
 		// test preloadTransaction
 		db.preloadTransaction();
 		
 		// Only going to do one test with the first transaction
-		Transaction tran = TransactionDao.transactions.get(0);
+		Transaction tran = transactionDao.get(0);
 		Assertions.assertTrue(tran.getAmount()==60.85, "Amount should be 60.85");
 		Assertions.assertTrue(tran.getAmountInCurrency().equalsIgnoreCase("$60.85"), "Amount should be $60.85");
 		Assertions.assertTrue(tran.getDate().toString().equalsIgnoreCase("Sat May 18 00:00:00 EDT 2019"), "Date should be Sat May 18 00:00:00 EDT 2019");
 		Assertions.assertTrue(tran.toStringDate().equalsIgnoreCase("05/18/2019"), "Date should be 05/18/2019");
 		Assertions.assertTrue(tran.getUser().equalsIgnoreCase("Hugh"), "User should be Hugh");
-		Assertions.assertTrue(tran.getDepositTo().equals(AccountDao.accounts.get(5)), "WithdrawFrom should be user 5");
-		Assertions.assertTrue(tran.getWithdrawFrom().equals(AccountDao.accounts.get(2)), "DepositTo should be user 2");
+		Assertions.assertTrue(tran.getDepositTo().getId() == 5, "WithdrawFrom should be user 5");
+		Assertions.assertTrue(tran.getWithdrawFrom().getId() == 2, "DepositTo should be user 2");
 		
-		Assertions.assertTrue( TransactionDao.transactions.size()==6, "size should be 6");
+		Assertions.assertTrue( transactionDao.getAll().size()==6, "size should be 6");
 		
 		// test printReports
 		db.printReports();
@@ -105,7 +113,7 @@ class DataBaseTest {
 			line = scan.nextLine();
 //			| ID: 0     | Name: Citi Bank Checking   | Type: Income  | Amount:    $1,300.00 | Category : Checking Account     |
 			line = scan.nextLine();
-			Assertions.assertTrue(line.contains("| ID: 0     | Name: Citi Bank Checking   | Type: Income  | Amount:    $1,300.00 | Category : Checking Account     |"), "Contains | ID: 0     | Name: Citi Bank Checking   | Type: Income  | Amount:    $1,300.00 | Category : Checking Account     |");
+			Assertions.assertTrue(line.contains("| ID: 0     | Name: Citi Bank Checking   | Type: income  | Amount:    $1,300.00 | Category : Checking Account     |"), "Contains | ID: 0     | Name: Citi Bank Checking   | Type: Income  | Amount:    $1,300.00 | Category : Checking Account     |");
 //			| ID: 1     | Name: Citi Bank Saving     | Type: Income  | Amount:    $3,000.00 | Category : Saving Account       |
 			line = scan.nextLine();
 			Assertions.assertTrue(line.contains("ID: 1"), "Contains ID: 1");
@@ -115,7 +123,7 @@ class DataBaseTest {
 			Assertions.assertTrue(line.contains("Name: Wallet"), "Contains Name: Wallet");
 //			| ID: 3     | Name: Whole Foods Market   | Type: Expense | Amount:    ($105.99) | Category : Groceries            |
 			line = scan.nextLine();
-			Assertions.assertTrue(line.contains("Type: Expense"), "Contains Type: Expense");
+			Assertions.assertTrue(line.contains("Type: expense"), "Contains Type: expense");
 //			| ID: 4     | Name: Rent                 | Type: Expense | Amount:  ($1,500.00) | Category : Rent                 |
 			line = scan.nextLine();
 			Assertions.assertTrue(line.contains("Amount:  ($1,500.00)"), "Contains Amount:  ($1,500.00)");

@@ -9,7 +9,7 @@ public interface Dao<T> {
     T get(Integer id) throws ResourceNotFoundException;
     List<T> getAll();
     void printAll();
-    void save(T t);
+    int save(T t);
     void update(Integer id, T t);
     void delete(Integer id);
 }

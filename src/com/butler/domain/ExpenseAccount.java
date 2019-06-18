@@ -13,7 +13,7 @@ public class ExpenseAccount extends Account {
 	}
 	@Override
 	public String getType() {
-		return "Expense";
+		return "expense";
 	}
 	public void deposit(double amount) {
 		this.updateAmount(-amount);

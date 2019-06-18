@@ -14,7 +14,7 @@ public class IncomeAccount extends Account {
 	}
 	@Override
 	public String getType() {
-		return "Income";
+		return "income";
 	}
 	public void deposit(double amount) {
 		this.updateAmount(amount);

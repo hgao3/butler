@@ -1,12 +1,14 @@
 package com.butler.application;
 
 import java.io.FileNotFoundException;
+import java.sql.Connection;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import com.butler.config.DataBase;
+import com.butler.config.EmbeddedDerbyDatabase;
 import com.butler.dao.AccountDao;
 import com.butler.dao.TransactionDao;
 import com.butler.domain.Account;
@@ -28,6 +30,8 @@ public class Main {
 	private TransactionUI transactionUI = new TransactionUI();
 	private ReportUI reportUI = new ReportUI();
 	public final static String LOGIN_USER = "Hugh";
+	public EmbeddedDerbyDatabase dbConn = new EmbeddedDerbyDatabase();
+	public Connection conn = null;
 
 	public static void main(String[] args) throws Exception {
 
@@ -48,14 +52,19 @@ public class Main {
 			int choice = ButlerIOUtils.getInputWithIntRange(scan, 1, 4);
 			performMenuAction(choice);
 		}
+		
+		// drop table
+		dbConn.dropTable();
 	}
 
 	private void setUpData() throws Exception {
-		//database.preloadAccount();
-		//database.preloadTransaction();
-		//replace preload with dat instead of txt file
-		database.preloadAccountFromDat();
-		database.preloadTransactionFromDat();
+		
+		//replace preload with database
+		dbConn.createDatabaseConnection();
+		dbConn.createTable();
+		dbConn.preloadAccountData();
+		dbConn.preloadTransactionsData();
+	
 	}
 
 	public void printHeader() {

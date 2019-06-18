@@ -28,23 +28,20 @@ class DataBasePrintReportFilterTest {
 	private AccountDao accountDao = new AccountDao();
 	private TransactionDao transactionDao = new TransactionDao();
 	
+	private EmbeddedDerbyDatabase conn = new EmbeddedDerbyDatabase();
+
 	@BeforeEach
 	void setUp() throws Exception {
-		try {
-    		// load test data
-			db.preloadAccount();
-			db.preloadTransaction();
-		} catch (FileNotFoundException e) {
-			Assertions.fail();
-		}
+		conn.createDatabaseConnection();
+		conn.createTable();
+		//conn.preloadAccountData();
+		//conn.preloadTransactionsData();
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
-		accountDao.accounts.clear();
-		accountDao.accountsCounter = 0;
-		transactionDao.transactions.clear();
-		transactionDao.transactionsCounter = 0;
+		conn.dropTable();
+		conn.shutDownDatabaseConnection();
 	}
 	
 	@Test

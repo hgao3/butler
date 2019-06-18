@@ -28,23 +28,20 @@ class DataBaseDatTest {
 	private AccountDao accountDao = new AccountDao();
 	private TransactionDao transactionDao = new TransactionDao();
 	
+	private EmbeddedDerbyDatabase conn = new EmbeddedDerbyDatabase();
+
 	@BeforeEach
 	void setUp() throws Exception {
-		try {
-    		// load test data
-			db.preloadAccount();
-			db.preloadTransaction();
-		} catch (FileNotFoundException e) {
-			Assertions.fail();
-		}
+		conn.createDatabaseConnection();
+		conn.createTable();
+		conn.preloadAccountData();
+		conn.preloadTransactionsData();
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
-		accountDao.accounts.clear();
-		accountDao.accountsCounter = 0;
-		transactionDao.transactions.clear();
-		transactionDao.transactionsCounter = 0;
+		conn.dropTable();
+		conn.shutDownDatabaseConnection();
 	}
 	
 	@Test
@@ -56,25 +53,23 @@ class DataBaseDatTest {
 		db.saveAccountToDat(); 
 		System.out.println(String.format("| %-110s  |", "Here is my pre-load Account from .dat file"));
 		  
-		  accountDao.accounts.clear(); 
-		  accountDao.accountsCounter = 0; 
+		conn.dropTable();
+		conn.createTable();
+		
 		  db.preloadAccountFromDat();
 		  accountDao.printAll();
 		 
 			// Only going to do one test with the first account
-			Account acc0 = AccountDao.accounts.get(0);
-			Assertions.assertTrue(acc0.getAmount()==1300, "Amount should be 1300");
-			Assertions.assertTrue(acc0.getAmountInCurrency().equalsIgnoreCase("$1,300.00"), "Amount should be $1,300.00");
+			Account acc0 = accountDao.get(0);
+			Assertions.assertTrue(acc0.getAmount()==3000, "Amount should be 3000");
+			Assertions.assertTrue(acc0.getAmountInCurrency().equalsIgnoreCase("$3,000.00"), "Amount should be $1,300.00");
 			Assertions.assertTrue(acc0.getCategory().equalsIgnoreCase("Checking Account"), "Category should be Checking Account");
 			Assertions.assertTrue(acc0.getName().equalsIgnoreCase("Citi Bank Checking"), "Name should be Citi Bank Checking");
 			Assertions.assertTrue(acc0.getOwner().equalsIgnoreCase("Hugh"), "Owner should be Hugh");
 			Assertions.assertTrue(acc0.getType().equalsIgnoreCase("Income"), "Type should be Income");
 			
-			Assertions.assertTrue( AccountDao.accounts.size()==6, "size should be 6");
+			Assertions.assertTrue( accountDao.getAll().size()==6, "size should be 6");
 		  
-			// clean up
-			  accountDao.accounts.clear(); 
-			  accountDao.accountsCounter = 0; 
 		
 		accountDao.getAll()
 	   		.stream()
@@ -82,10 +77,12 @@ class DataBaseDatTest {
 	   		.filter(a -> (a.getAmount() > 100))
 	   		.forEach(System.out::print);
 		
-	}
-	
-	@Test
-	void TransactionDatTest() throws FileNotFoundException {
+		
+		// part 2 transaction test
+		conn.dropTable();
+		conn.createTable();
+		conn.preloadAccountData();
+		conn.preloadTransactionsData();
 		
 		System.out.println(String.format("| %-110s  |", "Here is my pre-load Transaction from txt file"));
 		transactionDao.printAll();
@@ -93,32 +90,25 @@ class DataBaseDatTest {
 		db.saveTransactionToDat();
 		System.out.println(String.format("| %-110s  |", "Here is my pre-load Transaction from .dat file"));
 		  
-		  accountDao.accounts.clear(); 
-		  accountDao.accountsCounter = 0; 
-		transactionDao.transactions.clear(); 
-		transactionDao.transactionsCounter = 0; 
+		conn.dropTable();
+		conn.createTable();
+		
 		db.preloadAccount();
 		  db.preloadTransactionFromDat();
 		  transactionDao.printAll();
 		 
 			// Only going to do one test with the first transaction
-			Transaction tran = TransactionDao.transactions.get(0);
+			Transaction tran = transactionDao.get(0);
 			Assertions.assertTrue(tran.getAmount()==60.85, "Amount should be 60.85");
 			Assertions.assertTrue(tran.getAmountInCurrency().equalsIgnoreCase("$60.85"), "Amount should be $60.85");
 			Assertions.assertTrue(tran.getDate().toString().equalsIgnoreCase("Sat May 18 00:00:00 EDT 2019"), "Date should be Sat May 18 00:00:00 EDT 2019");
 			Assertions.assertTrue(tran.toStringDate().equalsIgnoreCase("05/18/2019"), "Date should be 05/18/2019");
 			Assertions.assertTrue(tran.getUser().equalsIgnoreCase("Hugh"), "User should be Hugh");
-			Assertions.assertTrue(tran.getDepositTo().getName().equals(AccountDao.accounts.get(5).getName()), "WithdrawFrom should be user 5");
-			Assertions.assertTrue(tran.getWithdrawFrom().getName().equals(AccountDao.accounts.get(2).getName()), "DepositTo should be user 2");
+			Assertions.assertTrue(tran.getDepositTo().getName().equals(accountDao.get(5).getName()), "WithdrawFrom should be user 5");
+			Assertions.assertTrue(tran.getWithdrawFrom().getName().equals(accountDao.get(2).getName()), "DepositTo should be user 2");
 			
-			Assertions.assertTrue( TransactionDao.transactions.size()==6, "size should be 6");		
-			
-			//clean up
-			transactionDao.transactions.clear(); 
-			transactionDao.transactionsCounter = 0; 
-			accountDao.accounts.clear(); 
-			accountDao.accountsCounter = 0; 
-			
+			Assertions.assertTrue( transactionDao.getAll().size()==6, "size should be 6");		
 	}
+	
 
 }

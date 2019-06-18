@@ -48,15 +48,19 @@ public class DataBase {
 			printLine(writer, 115);
 			writer.println(String.format("| %-110s  |", "Here is your Account Summary"));
 			printLine(writer, 115);
-			for (Map.Entry<Integer, Account> entry : AccountDao.accounts.entrySet()) {
-				writer.println(String.format("| ID: %-5d %s", entry.getKey(), entry.getValue()));
+			
+			List<Account> accountList = accountDao.getAll();
+			for (Account account : accountList) {
+				writer.println(String.format("| ID: %-5d %s", account.getId(), account));
 			}
+			
 			printLine(writer, 145);
 			writer.println(String.format("| %-140s  |", "Here is your Transaction View"));
 			printLine(writer, 145);
 
-			for (Map.Entry<Integer, Transaction> entry : TransactionDao.transactions.entrySet()) {
-				writer.println(String.format("| ID: %-5d %s", entry.getKey(), entry.getValue()));
+			List<Transaction> transactionList = transactionDao.getAll();
+			for (Transaction trans : transactionList) {		
+				writer.println(String.format("| ID: %-5d %s", trans.getId(), trans));
 			}
 			printLine(writer, 145);
 			writer.close();
@@ -80,6 +84,34 @@ public class DataBase {
 			writer.println(String.format("| %-140s  |", "Here is your Transaction View"));
 			printLine(writer, 145);
 
+			// print filtered transactions
+			transactionDao.getAllWithFilter(acc)
+					.forEach(t -> writer.println(String.format("| ID: %-5d %s", t.getId(), t)));
+
+			printLine(writer, 145);
+			writer.close();
+			System.out.println(
+					"All Account Summary and Transactions related to this account are saved to " + ACCOUNT_REPORT);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void printReportsWithAccountFilterBySQL(Account acc) {
+		System.out.println(ACCOUNT_REPORT + "...being built from scratch.");
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(new File(ACCOUNT_REPORT));
+			printLine(writer, 115);
+			writer.println(String.format("| %-110s  |", "Here is your Account Summary"));
+			printLine(writer, 115);
+			// print filtered account
+			writer.println(String.format("| ID: %-5d %s", acc.getId(), acc));
+			printLine(writer, 145);
+			writer.println(String.format("| %-140s  |", "Here is your Transaction View"));
+			printLine(writer, 145);
+
+			
 			// print filtered transactions
 			transactionDao.getAll().stream()
 					.filter(t -> (t.getWithdrawFrom().getId()==acc.getId() || t.getDepositTo().getId()==acc.getId()))
